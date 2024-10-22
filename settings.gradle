@@ -6,5 +6,6 @@
  */
 
 rootProject.name = 'distributed-monte-carlo-method'
-include 'master'
-include 'slave'
+include ':client'
+include ':master'
+include ':worker'
