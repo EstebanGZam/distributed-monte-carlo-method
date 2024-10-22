@@ -1,1 +1,1 @@
-# distributed-monte-carlo-method
+# Distributed Monte Carlo Method
