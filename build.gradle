@@ -8,7 +8,7 @@ subprojects {
 
     slice {
         java {
-            files = [file("../MonteCarloMethod.ice")] 
+            files = [file("../MonteCarloPi.ice")] 
         }
     }
 
@@ -37,7 +37,8 @@ subprojects {
         manifest {
             attributes(
                 "Main-Class": project.name.capitalize(),
-                "Class-Path": configurations.runtimeClasspath.files.collect { "${it.name}" }.join(' ') 
+                // "Class-Path": configurations.runtimeClasspath.files.collect { "${it.name}" }.join(' ') 
+                "Class-Path": configurations.runtimeClasspath.resolve().collect { it.toURI() }.join(' ')
         )
         }
     }
