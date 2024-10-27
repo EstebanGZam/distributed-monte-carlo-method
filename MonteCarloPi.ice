@@ -1,14 +1,15 @@
 module MonteCarloPi {
-    // Interface for the workers, who will perform the calculation
+
+    // Interface for workers who will perform the point calculations
     interface WorkerService {
-        // Method to receive the number of points to generate and return the points within the circle
-        ["async"] int calculatePoints(int numPoints);
+        // Method to receive the number of points to generate and return the points inside the circle
+        ["async"] long countPointsInsideCircle(long totalPoints);
     };
 
-    // Interface for the master, who will coordinate the task among the workers
+    // Interface for the task coordinator who will coordinate tasks among workers
     interface TaskCoordinator {
-        // Method to distribute tasks among the workers and calculate pi
-        ["async"] float estimatePi(int numPoints, int numWorkers);
+        // Method to distribute tasks among workers and estimate the value of π
+        ["async"] double calculatePiEstimation(long totalPoints, int numWorkers);
     };
 
 };

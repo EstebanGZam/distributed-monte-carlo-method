@@ -1,24 +1,29 @@
 import MonteCarloPi.TaskCoordinatorPrx;
 import com.zeroc.Ice.Communicator;
-import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 
+import java.util.Scanner;
+
 public class Client {
-	private static final int NUM_WORKERS = 2;
 
 	public static void main(String[] args) {
-		try (Communicator communicator = com.zeroc.Ice.Util.initialize(args);
-			 Scanner scanner = new Scanner(System.in)) {
+		try (Communicator communicator = com.zeroc.Ice.Util.initialize(args, "client.cfg");
+				Scanner scanner = new Scanner(System.in)) {
+			int numWorkers = Integer.parseInt(communicator.getProperties().getProperty("num.workers"));
 
 			System.out.println("Cliente iniciado...");
 			System.out.println("Escriba 'exit' para terminar o ingrese el número de puntos a calcular.");
 
-			while (true) {
+			boolean exit = false;
+
+			while (!exit) {
 				System.out.print("\nIngrese el número de puntos a calcular: ");
 				String input = scanner.nextLine().trim();
 
-				if (input.equalsIgnoreCase("exit")) {
+				exit = input.equalsIgnoreCase("exit");
+				if (exit) {
 					System.out.println("Finalizando cliente...");
+					communicator.shutdown();
 					break;
 				}
 
@@ -28,10 +33,9 @@ public class Client {
 						System.out.println("Por favor, ingrese un número positivo de puntos.");
 						continue;
 					}
-					// Esperar a que termine la estimación antes de pedir el siguiente número
-					requestPiEstimation(communicator, numPoints, NUM_WORKERS).get();
+					requestPiEstimation(communicator, numPoints, numWorkers);
 				} catch (NumberFormatException e) {
-					System.out.println("Por favor, ingrese un número válido o 'exit' para terminar.");
+					System.out.print("Por favor, ingrese un número válido o 'exit' para terminar: ");
 				} catch (Exception e) {
 					System.err.println("Error en la ejecución: " + e.getMessage());
 				}
@@ -39,22 +43,31 @@ public class Client {
 		}
 	}
 
-	public static CompletableFuture<Void> requestPiEstimation(Communicator communicator, int numPoints, int numWorkers) {
+	public static CompletableFuture<Void> requestPiEstimation(Communicator communicator, int numPoints,
+			int numWorkers) {
+		// Obtener el proxy del archivo de configuración
+
 		TaskCoordinatorPrx master = TaskCoordinatorPrx.checkedCast(
-				communicator.stringToProxy("master:default -h localhost -p 10000"));
+				communicator.propertyToProxy("master.proxy"));
 
 		if (master != null) {
-			System.out.println("Solicitando estimación de π con " + numPoints + " puntos y " + numWorkers + " trabajadores...");
+			System.out.println(
+					"\nSolicitando estimación de π con " + numPoints + " puntos y " + numWorkers + " trabajadores...");
 
-			return master.estimatePiAsync(numPoints, numWorkers)
+			return master.calculatePiEstimationAsync(numPoints, numWorkers)
 					.thenAccept(result -> {
-						System.out.println("\nResultados:");
-						System.out.println("------------");
+						System.out.println("\n------------------------------------------------");
+						System.out.println(
+								"\nResultado con " + numPoints + " puntos y " + numWorkers + " trabajadores:");
 						System.out.println("Estimación de π: " + result);
 						System.out.println("Valor real de π: " + Math.PI);
 						System.out.println("Error absoluto: " + Math.abs(result - Math.PI));
-						System.out.println("------------");
+						System.out.println("------------------------------------------------");
+
+						System.out.print("\nIngrese el número de puntos a calcular: ");
 					});
+		} else {
+			System.err.println("Error al obtener el proxy del maestro.");
 		}
 		return CompletableFuture.completedFuture(null);
 	}

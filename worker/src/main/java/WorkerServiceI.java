@@ -7,8 +7,8 @@ public class WorkerServiceI implements WorkerService {
 	private final Random random = new Random();
 
 	@Override
-	public int calculatePoints(int numPoints, Current current) {
-		int pointsInsideCircle = 0;
+	public long countPointsInsideCircle(long numPoints, Current current) {
+		long pointsInsideCircle = 0;
 
 		for (int i = 0; i < numPoints; i++) {
 			// Generar puntos aleatorios entre -1 y 1
