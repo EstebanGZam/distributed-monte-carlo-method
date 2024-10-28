@@ -1,3 +1,4 @@
+import MonteCarloPi.PiEstimationResult;
 import MonteCarloPi.TaskCoordinator;
 import MonteCarloPi.WorkerServicePrx;
 import com.zeroc.Ice.Communicator;
@@ -15,20 +16,39 @@ public class TaskCoordinatorI implements TaskCoordinator {
 	}
 
 	@Override
-	public double calculatePiEstimation(long numPoints, int numWorkers, Current current) {
-		System.out.println("Estimando el valor de π con " + numPoints + " puntos y " + numWorkers + " trabajadores...");
-		long pointsPerWorker = numPoints / numWorkers + 1;
+	public PiEstimationResult calculatePiEstimation(long numPoints, int numWorkers, Current current) {
+		System.out.println("------------------------------------------------");
+		System.out
+				.println("Estimando el valor de pi con " + numPoints + " puntos y " + numWorkers + " trabajadores...");
+		long pointsPerWorker = numPoints / numWorkers;
 
 		List<CompletableFuture<Long>> futures = new ArrayList<>();
 
-		for (int i = 0; i < numWorkers; i++) {
-			WorkerServicePrx worker = WorkerServicePrx.checkedCast(
-					communicator.stringToProxy("worker" + i + ":default -h localhost -p " + (10001 + i)));
+		long startTime = System.currentTimeMillis(); // Inicio del tiempo de procesamiento
 
-			if (worker != null) {
-				System.out.println("Solicitando al trabajador " + i + " calcular " + pointsPerWorker + " puntos...");
-				CompletableFuture<Long> future = worker.countPointsInsideCircleAsync(pointsPerWorker);
-				futures.add(future);
+		for (int i = 1; i <= numWorkers; i++) {
+			// Obtiene el proxy desde la configuración
+			String proxyProperty = "Worker" + i + ".Proxy";
+			String proxyString = communicator.getProperties().getProperty(proxyProperty);
+
+			if (proxyString != null && !proxyString.isEmpty()) {
+				try {
+					WorkerServicePrx worker = WorkerServicePrx.checkedCast(
+							communicator.stringToProxy(proxyString));
+
+					if (worker != null) {
+						System.out.println(
+								"Solicitando al trabajador " + i + " calcular " + pointsPerWorker + " puntos...");
+						CompletableFuture<Long> future = worker.countPointsInsideCircleAsync(pointsPerWorker);
+						futures.add(future);
+					} else {
+						System.err.println("No se pudo conectar al worker " + i);
+					}
+				} catch (Exception e) {
+					System.err.println("Error al crear proxy para el worker " + i + ": " + e.getMessage());
+				}
+			} else {
+				System.err.println("No se encontró configuración para worker " + i);
 			}
 		}
 
@@ -45,9 +65,12 @@ public class TaskCoordinatorI implements TaskCoordinator {
 			}
 		} catch (InterruptedException | ExecutionException e) {
 			System.err.println("Error al obtener resultados: " + e.getMessage());
-			return 0.0;
+			return new PiEstimationResult(0, 0.0); // Retorna 0 en caso de error
 		}
 
-		return (4.0 * totalPointsInCircle) / numPoints;
+		long endTime = System.currentTimeMillis(); // Fin del tiempo de procesamiento
+		long processingTime = endTime - startTime; // Tiempo de procesamiento en milisegundos
+
+		return new PiEstimationResult(processingTime, (4.0 * totalPointsInCircle) / numPoints);
 	}
 }

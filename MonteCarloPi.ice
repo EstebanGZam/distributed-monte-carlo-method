@@ -1,4 +1,8 @@
 module MonteCarloPi {
+    class PiEstimationResult {
+        long processingTime;
+        double estimatedPiValue;
+    };
 
     // Interface for workers who will perform the point calculations
     interface WorkerService {
@@ -8,8 +12,8 @@ module MonteCarloPi {
 
     // Interface for the task coordinator who will coordinate tasks among workers
     interface TaskCoordinator {
-        // Method to distribute tasks among workers and estimate the value of π
-        ["async"] double calculatePiEstimation(long totalPoints, int numWorkers);
+        // Method to distribute tasks among workers and estimate the value of pi
+        ["async"] PiEstimationResult calculatePiEstimation(long totalPoints, int numWorkers);
     };
 
 };

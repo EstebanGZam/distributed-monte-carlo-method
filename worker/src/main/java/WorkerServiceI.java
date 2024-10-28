@@ -9,6 +9,8 @@ public class WorkerServiceI implements WorkerService {
 	@Override
 	public long countPointsInsideCircle(long numPoints, Current current) {
 		long pointsInsideCircle = 0;
+		System.out.println("------------------------------------------------");
+		System.out.println("Calculando " + numPoints + " puntos...");
 
 		for (int i = 0; i < numPoints; i++) {
 			// Generar puntos aleatorios entre -1 y 1

@@ -52,16 +52,17 @@ public class Client {
 
 		if (master != null) {
 			System.out.println(
-					"\nSolicitando estimación de π con " + numPoints + " puntos y " + numWorkers + " trabajadores...");
+					"\nSolicitando estimación de pi con " + numPoints + " puntos y " + numWorkers + " trabajadores...");
 
 			return master.calculatePiEstimationAsync(numPoints, numWorkers)
 					.thenAccept(result -> {
 						System.out.println("\n------------------------------------------------");
 						System.out.println(
 								"\nResultado con " + numPoints + " puntos y " + numWorkers + " trabajadores:");
-						System.out.println("Estimación de π: " + result);
-						System.out.println("Valor real de π: " + Math.PI);
-						System.out.println("Error absoluto: " + Math.abs(result - Math.PI));
+						System.out.println("Estimación de pi: " + result.estimatedPiValue);
+						System.out.println("Valor real de pi: " + Math.PI);
+						System.out.println("Error absoluto: " + Math.abs(result.estimatedPiValue - Math.PI));
+						System.out.println("Tiempo de procesado: " + result.processingTime + " ms");
 						System.out.println("------------------------------------------------");
 
 						System.out.print("\nIngrese el número de puntos a calcular: ");

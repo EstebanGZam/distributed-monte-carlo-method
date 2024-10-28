@@ -7,7 +7,7 @@ public class Worker {
             // Crear un adaptador en el puerto 10001, 10002, etc.
             int workerId = Integer.parseInt(args[0]);
             ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("WorkerAdapter",
-                    "default -h localhost -p " + (10001 + workerId));
+                    "default -h 10.147.19.230 -p " + (10000 + workerId));
 
             // Crear instancia del trabajador
             WorkerServiceI worker = new WorkerServiceI();
