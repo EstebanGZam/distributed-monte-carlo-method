@@ -2,6 +2,13 @@
 
 Este proyecto implementa un sistema distribuido para estimar el valor de π mediante el método de Monte Carlo. La estimación se logra lanzando puntos aleatorios y calculando la proporción de aquellos que caen dentro de un círculo inscrito en un cuadrado. Para esto, se distribuyen las tareas entre varios nodos en un modelo de cliente-maestro-trabajadores (master-workers), utilizando comunicación asíncrona a través de ICE (Internet Communications Engine).
 
+## Equipo
+
+- Esteban Gaviria Zambrano - A00396019
+- Jose Manuel Cardona - A00399980
+- Juan Manuel Díaz - A00394477
+- Juan Camilo Muñoz Barco - A00399199
+
 ## Objetivo
 
 El objetivo de este proyecto es implementar un sistema distribuido donde:
