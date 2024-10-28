@@ -35,7 +35,7 @@ public class Client {
 					}
 					requestPiEstimation(communicator, numPoints, numWorkers);
 				} catch (NumberFormatException e) {
-					System.out.print("Por favor, ingrese un número válido o 'exit' para terminar: ");
+					System.out.println("Por favor, ingrese un número válido o 'exit' para terminar.");
 				} catch (Exception e) {
 					System.err.println("Error en la ejecución: " + e.getMessage());
 				}

@@ -6,8 +6,12 @@ public class Worker {
         try (Communicator communicator = com.zeroc.Ice.Util.initialize(args)) {
             // Crear un adaptador en el puerto 10001, 10002, etc.
             int workerId = Integer.parseInt(args[0]);
+            // Verificar que el workerId sea mayor a 0
+            if (workerId <= 0) {
+                throw new IllegalArgumentException("El workerId debe ser mayor a 0");
+            }
             ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("WorkerAdapter",
-                    "default -h 10.147.19.230 -p " + (10000 + workerId));
+                    "default -h localhost -p " + (10000 + workerId));
 
             // Crear instancia del trabajador
             WorkerServiceI worker = new WorkerServiceI();
