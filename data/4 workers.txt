@@ -1,0 +1,41 @@
+Cliente iniciado...
+Escriba 'exit' para terminar o ingrese el número de puntos a calcular.
+
+Ingrese el número de puntos a calcular: 1000
+
+Solicitando estimación de pi con 1000 puntos y 4 trabajadores...
+
+------------------------------------------------
+
+Resultado con 1000 puntos y 4 trabajadores:
+Estimación de pi: 3.164
+Valor real de pi: 3.141592653589793
+Error absoluto: 0.02240734641020703
+Tiempo de procesado: 23 ms
+------------------------------------------------
+
+Ingrese el número de puntos a calcular: 1000000
+
+Solicitando estimación de pi con 1000000 puntos y 4 trabajadores...
+
+------------------------------------------------
+
+Resultado con 1000000 puntos y 4 trabajadores:
+Estimación de pi: 3.14528
+Valor real de pi: 3.141592653589793
+Error absoluto: 0.0036873464102069597
+Tiempo de procesado: 21 ms
+------------------------------------------------
+
+Ingrese el número de puntos a calcular: 1000000000 
+
+Solicitando estimación de pi con 1000000000 puntos y 4 trabajadores...
+
+------------------------------------------------
+
+Resultado con 1000000000 puntos y 4 trabajadores:
+Estimación de pi: 3.141635972
+Valor real de pi: 3.141592653589793
+Error absoluto: 4.3318410206882874E-5
+Tiempo de procesado: 10769 ms
+------------------------------------------------
